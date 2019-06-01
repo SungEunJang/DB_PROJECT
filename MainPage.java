@@ -13,13 +13,24 @@ import java.util.*;
 public class MainPage{
 	public static final int DEFAULT = 0;
 	public static final int LOGINCHECK = 1;
+	public static final int CHANGEACCOUNT = 2;
+	
+	public static final int SAVE = 3;
+
 	
 	ArrayList<String> data = new ArrayList<String>();
 	String username;
 	String passwd;
 	String what;
 	String col;
+	String name;
+	String new_passwd;
+	String email;
+	
 	int mode = DEFAULT;
+	int check = 0;
+	int checkboxnum;
+	int adminLog = 0;
 	static 	String url = "jdbc:mysql://localhost:3306/fortest?characterEncoding=UTF-8&serverTimezone=UTC";
 	static final String user = "root";
 	static final String password = "password";
@@ -36,18 +47,39 @@ public class MainPage{
 		JLabel pwLabel = new JLabel("Password");
 		JPasswordField pwField = new JPasswordField();
 		JButton loginBtn = new JButton("Log in");
+		JFrame editFrame = new JFrame("Change data");
+		JLabel editLabel = new JLabel("Change to what?");
+		JTextField editText = new JTextField();
+		JButton editBtn = new JButton("Okay");
 		JButton createBtn =	new JButton("Create Account");
+		JButton changeBtn = new JButton("Change Account");
 		JScrollPane jScrollPane;
 		JFrame warnFrame = new JFrame();
 		JLabel warnLabel = new JLabel();
 		JButton warnBtn = new JButton("Got it");
-		
-		
+		JFrame createFrame = new JFrame("Change Account");
+		JPanel createPanel = new JPanel();
+		JLabel changeLabel = new JLabel("Change your Info");
+		JFrame askFrame = new JFrame();
+		JLabel askLabel = new JLabel();
+		JButton askBtn1 = new JButton("Yes");
+		JButton askBtn2 = new JButton("No");
+		JLabel userModeLabel = new JLabel("UserMode");
+		JLabel changeInfoLabel = new JLabel("Change Info");
 		Dimension dim_Frame = new Dimension(1600,900);
 		Dimension dim_Label = new Dimension(300,30);
 		Dimension dim_Field = new Dimension(300,40);
 		Dimension dim_Button = new Dimension(300,70);
 		Dimension dim_SButton = new Dimension(150,70);
+		
+		JPanel userPanel = new JPanel();
+		
+
+		JButton [] newBtn = new JButton[3];
+		JLabel [] newLabel = new JLabel[4];
+		JTextField [] userField = new JTextField[6];
+		JTextField [] newField = new JTextField[6];
+		
 		public static void main(String[] args) {
 			new MainPage();
 		}
@@ -73,10 +105,12 @@ public class MainPage{
 		loginBtn.setLocation(50, 210);
 		createBtn.setSize(dim_Button);
 		createBtn.setLocation(50, 280);
+		changeBtn.setSize(dim_Button);
+		changeBtn.setLocation(50,350);
 		
 		loginBtn.addActionListener(new ButtonAction());
 		createBtn.addActionListener(new ButtonAction());
-		
+		changeBtn.addActionListener(new ButtonAction());
 		mainPanel.setFont(new Font("Arial", Font.BOLD, 20));
 		frame.add(mainPanel);
 		
@@ -86,7 +120,7 @@ public class MainPage{
 		mainPanel.add(pwField);
 		mainPanel.add(loginBtn);
 		mainPanel.add(createBtn);
-		
+		mainPanel.add(changeBtn);
 		warnFrame.setSize(400, 200);
 		warnFrame.setLocation(0, 0);
 		warnFrame.setLayout(null);
@@ -104,6 +138,17 @@ public class MainPage{
 		warnFrame.add(warnLabel);
 		warnFrame.add(warnBtn);
 		
+		newLabel[0] = new JLabel("UserName");
+		newField[0] = new JTextField();
+		newLabel[1] = new JLabel("Before Password");
+		newField[1] = new JTextField();
+		newLabel[2] = new JLabel("NEW Password");
+		newField[2] = new JTextField();
+		newLabel[3] = new JLabel("E-mail");
+		newField[3] = new JTextField();
+		newBtn[0] = new JButton("Save");
+		newBtn[1] = new JButton("Cancel");
+		newBtn[2] = new JButton("중복 확인");
 		
 	}
 	class ButtonAction implements ActionListener{
@@ -123,10 +168,92 @@ public class MainPage{
 			}
 			else if(temp.equals("Create Account")) {
 				System.out.println("GO TO PHP! ");
+			}
+			else if(temp.equals("Change Account")) {
+				mode = CHANGEACCOUNT;
+				createPanel.setLayout(null);
+				frame.remove(mainPanel);
+				frame.add(createPanel);
+				frame.revalidate();
+				frame.repaint();
+				
+				int x = 50, y = 10;
+
+				for(int i =  0; i< newLabel.length ; i++) {
+					newLabel[i].setLocation(x, y);
+					newLabel[i].setSize(dim_Label);
+					createPanel.add(newLabel[i]);
+					y += 30;
+					newField[i].setLocation(x, y);
+					newField[i].setSize(dim_Field);
+					createPanel.add(newField[i]);
+					y += 40;
+					if(i==0) y += 50; 
+				}
+				for(int i = 0; i < newBtn.length -1 ; i++) {
+					newBtn[i].setLocation(x, y);
+					newBtn[i].setSize(dim_SButton);
+					newBtn[i].addActionListener(this);
+					createPanel.add(newBtn[i]);
+					x += 150;
+				}
+				
+				newBtn[2].setLocation(230, 80);
+				newBtn[2].setSize(120, 50);
+				newBtn[2].addActionListener(this);
+				createPanel.add(newBtn[2]);
+				
+			}
+				
+
+				else if(temp.equals("Got it")){
+					warnFrame.setVisible(false);
+				}
+				else if(temp.equals("Save")) {				
+					mode = SAVE;
+					String warnMessage = "";
+					warnMessage ="Success!";
+						System.out.println("new account added");
+						username = newField[0].getText();
+						passwd = newField[1].getText();
+						new_passwd = newField[2].getText();
+						
+						email = newField[3].getText();
+
+						//for(int i = 0; i < newField.length; i++) {
+							//newField[i].setText(" ");
+						//}
+						command();
+						warnLabel.setText("Account created! Login with your Account!");
+						warnFrame.setVisible(true);
+						frame.remove(createPanel);
+						frame.add(mainPanel);
+						frame.revalidate();
+						frame.repaint();
+						mode = DEFAULT;
+						check = 0;
+					}
+				
+
+				else if(temp.equals("Cancel")) {
+					frame.remove(createPanel);
+					frame.remove(userPanel);
+					frame.add(mainPanel);
+					frame.revalidate();
+					frame.repaint();
+					for(int i = 0; i < newField.length; i++) {
+						newField[i].setText("");
+					}
+					for(int i = 0; i < userField.length; i++) {
+						userField[i].setText("");
+					}
+					mode = DEFAULT;
+				}
+			}
 		}
-	}
+	
 		
-	}
+	
 	public void command() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver"); 
@@ -141,14 +268,14 @@ public class MainPage{
 			stmt.executeUpdate(useXproject);
 			
 			if(mode == LOGINCHECK) {
-				col = "STU_SSN";
+				col = "SINFO_SSN";
 				what = username;
 				
-				String search = "select * from students_reg where " + col + " like '" + what +"';";
+				String search = "select * from SINFO where " + col + " like '" + what +"';";
 				//System.out.println(search);
 				rs = stmt.executeQuery(search);
 				if(rs.next()) {
-					if(passwd.equals(rs.getString("STU_SSN"))){
+					if(passwd.equals(rs.getString("SINFO_PASS"))){
 						warnFrame.setVisible(true);
 						warnLabel.setText("Login Succeeded");
 						System.out.println("login succeeded");
@@ -168,6 +295,13 @@ public class MainPage{
 
 				}
 			}
+			else if(mode == SAVE) {
+				String Update = "update SINFO set SINFO_PASS = '" + new_passwd 
+						+ "' where SINFO_NAME = '"+ username+"' ; ";
+				stmt.executeUpdate(Update);
+				System.out.println(Update);
+			}
+			
 		}
 		catch(ClassNotFoundException e) {
 			e.printStackTrace();
