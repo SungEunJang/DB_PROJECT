@@ -16,7 +16,7 @@ public class MainPage{
 	public static final int CHANGEACCOUNT = 2;
 	
 	public static final int SAVE = 3;
-
+	public static final int DELETEACCOUNT =4;
 	
 	ArrayList<String> data = new ArrayList<String>();
 	String username;
@@ -71,7 +71,7 @@ public class MainPage{
 		Dimension dim_Field = new Dimension(300,40);
 		Dimension dim_Button = new Dimension(300,70);
 		Dimension dim_SButton = new Dimension(150,70);
-		
+		JButton DeleteBtn = new JButton("Delete Account");
 		JPanel userPanel = new JPanel();
 		
 
@@ -79,6 +79,11 @@ public class MainPage{
 		JLabel [] newLabel = new JLabel[4];
 		JTextField [] userField = new JTextField[6];
 		JTextField [] newField = new JTextField[6];
+		
+		JButton [] deleteBtn = new JButton[3];
+		JLabel [] deleteLabel = new JLabel[3];
+		//JTextField [] userField = new JTextField[6];
+		JTextField [] deleteField = new JTextField[6];
 		
 		public static void main(String[] args) {
 			new MainPage();
@@ -103,11 +108,14 @@ public class MainPage{
 		pwField.setLocation(50, 140);
 		loginBtn.setSize(dim_Button);
 		loginBtn.setLocation(50, 210);
+		
 		createBtn.setSize(dim_Button);
 		createBtn.setLocation(50, 280);
 		changeBtn.setSize(dim_Button);
 		changeBtn.setLocation(50,350);
-		
+		DeleteBtn.setSize(dim_Button);
+		DeleteBtn.setLocation(50, 420);
+		DeleteBtn.addActionListener(new ButtonAction());
 		loginBtn.addActionListener(new ButtonAction());
 		createBtn.addActionListener(new ButtonAction());
 		changeBtn.addActionListener(new ButtonAction());
@@ -121,6 +129,7 @@ public class MainPage{
 		mainPanel.add(loginBtn);
 		mainPanel.add(createBtn);
 		mainPanel.add(changeBtn);
+		mainPanel.add(DeleteBtn);
 		warnFrame.setSize(400, 200);
 		warnFrame.setLocation(0, 0);
 		warnFrame.setLayout(null);
@@ -140,7 +149,7 @@ public class MainPage{
 		
 		newLabel[0] = new JLabel("UserName");
 		newField[0] = new JTextField();
-		newLabel[1] = new JLabel("Before Password");
+		newLabel[1] = new JLabel("Your Password");
 		newField[1] = new JTextField();
 		newLabel[2] = new JLabel("NEW Password");
 		newField[2] = new JTextField();
@@ -149,6 +158,18 @@ public class MainPage{
 		newBtn[0] = new JButton("Save");
 		newBtn[1] = new JButton("Cancel");
 		newBtn[2] = new JButton("중복 확인");
+		
+		deleteLabel[0] = new JLabel("UserName");
+		deleteField[0] = new JTextField();
+		deleteLabel[1] = new JLabel("Before Password");
+		deleteField[1] = new JTextField();
+		deleteLabel[2] = new JLabel("E-mail");
+		deleteField[2] = new JTextField();
+	
+		deleteBtn[0] = new JButton("OK");
+		deleteBtn[1] = new JButton("Cancel");
+		
+		
 		
 	}
 	class ButtonAction implements ActionListener{
@@ -233,7 +254,60 @@ public class MainPage{
 						mode = DEFAULT;
 						check = 0;
 					}
-				
+				else if(temp.equals("Delete Account")) {
+					
+					createPanel.setLayout(null);
+					frame.remove(mainPanel);
+					frame.add(createPanel);
+					frame.revalidate();
+					frame.repaint();
+					int x = 50, y = 10;
+
+					for(int i =  0; i< deleteLabel.length ; i++) {
+						deleteLabel[i].setLocation(x, y);
+						deleteLabel[i].setSize(dim_Label);
+						createPanel.add(deleteLabel[i]);
+						y += 30;
+						deleteField[i].setLocation(x, y);
+						deleteField[i].setSize(dim_Field);
+						createPanel.add(deleteField[i]);
+						y += 40;
+						if(i==0) y += 50; 
+					}
+					for(int i = 0; i < deleteBtn.length -1 ; i++) {
+						deleteBtn[i].setLocation(x, y);
+						deleteBtn[i].setSize(dim_SButton);
+						deleteBtn[i].addActionListener(this);
+						createPanel.add(deleteBtn[i]);
+						x += 150;
+					}
+					
+
+					
+				}
+					
+				else if(temp.equals("OK")) {				
+					mode = DELETEACCOUNT;
+					String warnMessage = "";
+					warnMessage ="Your account was deleted";
+						System.out.println("Delete aCCOUNT");
+						username = deleteField[0].getText();
+						passwd = deleteField[1].getText();
+						
+
+						//for(int i = 0; i < newField.length; i++) {
+							//newField[i].setText(" ");
+						//}
+						command();
+						warnLabel.setText("Account Delete!");
+						warnFrame.setVisible(true);
+						frame.remove(createPanel);
+						frame.add(mainPanel);
+						frame.revalidate();
+						frame.repaint();
+						mode = DEFAULT;
+						check = 0;
+					}
 
 				else if(temp.equals("Cancel")) {
 					frame.remove(createPanel);
@@ -300,6 +374,11 @@ public class MainPage{
 						+ "' where SINFO_NAME = '"+ username+"' ; ";
 				stmt.executeUpdate(Update);
 				System.out.println(Update);
+			}
+			else if(mode ==DELETEACCOUNT) {
+				String delete = "DELETE FROM SINFO WHERE SINFO_SSN =' "+ username +"';";
+				System.out.println(delete);
+				stmt.executeUpdate(delete);
 			}
 			
 		}
