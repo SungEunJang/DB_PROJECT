@@ -59,6 +59,7 @@ public class MainPage{
 		JButton warnBtn = new JButton("Got it");
 		JFrame createFrame = new JFrame("Change Account");
 		JPanel createPanel = new JPanel();
+		JPanel deletePanel = new JPanel();
 		JLabel changeLabel = new JLabel("Change your Info");
 		JFrame askFrame = new JFrame();
 		JLabel askLabel = new JLabel();
@@ -167,7 +168,7 @@ public class MainPage{
 		deleteField[2] = new JTextField();
 	
 		deleteBtn[0] = new JButton("OK");
-		deleteBtn[1] = new JButton("Cancel");
+		deleteBtn[1] = new JButton("Cancel_delete");
 		
 		
 		
@@ -256,9 +257,9 @@ public class MainPage{
 					}
 				else if(temp.equals("Delete Account")) {
 					
-					createPanel.setLayout(null);
+					deletePanel.setLayout(null);
 					frame.remove(mainPanel);
-					frame.add(createPanel);
+					frame.add(deletePanel);
 					frame.revalidate();
 					frame.repaint();
 					int x = 50, y = 10;
@@ -266,11 +267,11 @@ public class MainPage{
 					for(int i =  0; i< deleteLabel.length ; i++) {
 						deleteLabel[i].setLocation(x, y);
 						deleteLabel[i].setSize(dim_Label);
-						createPanel.add(deleteLabel[i]);
+						deletePanel.add(deleteLabel[i]);
 						y += 30;
 						deleteField[i].setLocation(x, y);
 						deleteField[i].setSize(dim_Field);
-						createPanel.add(deleteField[i]);
+						deletePanel.add(deleteField[i]);
 						y += 40;
 						if(i==0) y += 50; 
 					}
@@ -278,7 +279,7 @@ public class MainPage{
 						deleteBtn[i].setLocation(x, y);
 						deleteBtn[i].setSize(dim_SButton);
 						deleteBtn[i].addActionListener(this);
-						createPanel.add(deleteBtn[i]);
+						deletePanel.add(deleteBtn[i]);
 						x += 150;
 					}
 					
@@ -301,7 +302,7 @@ public class MainPage{
 						command();
 						warnLabel.setText("Account Delete!");
 						warnFrame.setVisible(true);
-						frame.remove(createPanel);
+						frame.remove(deletePanel);
 						frame.add(mainPanel);
 						frame.revalidate();
 						frame.repaint();
@@ -311,6 +312,20 @@ public class MainPage{
 
 				else if(temp.equals("Cancel")) {
 					frame.remove(createPanel);
+					frame.remove(userPanel);
+					frame.add(mainPanel);
+					frame.revalidate();
+					frame.repaint();
+					for(int i = 0; i < newField.length; i++) {
+						newField[i].setText("");
+					}
+					for(int i = 0; i < userField.length; i++) {
+						userField[i].setText("");
+					}
+					mode = DEFAULT;
+				}
+				else if(temp.equals("Cancel_delete")) {
+					frame.remove(deletePanel);
 					frame.remove(userPanel);
 					frame.add(mainPanel);
 					frame.revalidate();
