@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+import java.io.IOException;
 
 //class MainPage implements ActionListener{
 public class MainPage{
@@ -31,7 +32,7 @@ public class MainPage{
 	int check = 0;
 	int checkboxnum;
 	int adminLog = 0;
-	static 	String url = "jdbc:mysql://localhost:3306/fortest?characterEncoding=UTF-8&serverTimezone=UTC";
+	static 	String url = "jdbc:mysql://localhost:3306/final_project?characterEncoding=UTF-8&serverTimezone=UTC";
 	static final String user = "root";
 	static final String password = "password";
 	Connection conn = null;
@@ -189,7 +190,11 @@ public class MainPage{
 				command();
 			}
 			else if(temp.equals("Create Account")) {
-				System.out.println("GO TO PHP! ");
+				Runtime runtime = Runtime.getRuntime();
+				try {
+					runtime.exec("explorer.exe http://localhost/index.php");
+				} catch (IOException ex) {
+				}
 			}
 			else if(temp.equals("Change Account")) {
 				mode = CHANGEACCOUNT;
@@ -353,7 +358,7 @@ public class MainPage{
 
 			stmt = conn.createStatement();
 			
-			String useXproject = "use fortest";
+			String useXproject = "use final_project";
 			stmt.executeUpdate(useXproject);
 			
 			if(mode == LOGINCHECK) {
