@@ -45,24 +45,18 @@ font-size : 9pt; }
                     <input id ="seme" type="text" name="seme" size=20 maxlength=25>
                 </td>
             </tr>
-            <!--<tr>
-                <td width=60 align=left >과 목 이 름  </td>
-                <td align=left >
-                    <INPUT type=text name=seme size=20 maxlength=25>
-                </td>
-            </tr>-->
             <tr>
-                <td width=60 align=left >과 목 이 름 </td>
+                <td width=60 align=left >학 점   </td>
                 <td align=left >
-                    <input id= "lecname" type="text" name=
+                    <input id= "star" type="text" name=
                     "lecname" size=20 maxlength=25> 
-                    
                 </td>
             </tr>
+           
             <tr>
                 <td width=60 align=left >강 의 번 호 </td>
                 <td align=left >
-                    <INPUT type="text" name=
+                    <INPUT id = "lecnum" type="text" name=
                     "lecnum" size=60 maxlength=35>
                 </td>
             </tr>

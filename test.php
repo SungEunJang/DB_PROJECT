@@ -27,16 +27,17 @@ include('dbcon.php');
             </thead>  
       
             <?php  
-                try {
-                    $stmt = $con->prepare('SELECT LEC_NAME,EV_SEME,EV_STAR,EV_CONTENT FROM Evaluation,Lectures WHERE EV_LECNUM IN (LEC_NUM) ORDER BY id DESC');
-                    $stmt->bindParam(':LEC_NAME', $LEC_NAME);
-                    $stmt->bindParam(':EV_SEME', $EV_SEME);
-                    $stmt->bindParam(':EV_STAR', $EV_START);
-                    $stmt->bindParam(':EV_CONTENT', $EV_CONTENT);
-                    $stmt->execute();
-                } catch(PDOException $e) {
-                    die("Database error. " . $e->getMessage()); 
-                }
+
+                $stmt = $con->prepare('SELECT LEC_NAME,EV_SEME,EV_STAR,EV_CONTENT FROM Evaluation,Lectures WHERE EV_LECNUM IN (LEC_NUM) ORDER BY id DESC');
+                #$EV_SEME = $_POST["seme"];
+                #$EV_STAR = $_POST["star"];
+                #$EV_CONTENT = $_POST["content"];
+                #$LEC_NAME = $_POST["name"];
+                $stmt->bindParam(':LEC_NAME', $LEC_NAME);
+                $stmt->bindParam(':EV_SEME', $EV_SEME);
+                $stmt->bindParam(':EV_STAR', $EV_START);
+                $stmt->bindParam(':EV_CONTENT', $EV_CONTENT);
+                $stmt->execute();
 
                 if ($stmt->rowCount() > 0) {
                     while($row=$stmt->fetch(PDO::FETCH_ASSOC)) {

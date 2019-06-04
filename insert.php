@@ -2,25 +2,30 @@
 <?php
     //데이터 베이스 연결하기
     include("dbcon.php");
-        $te_seme = $_POST['seme'];
-        $te_lecnum = $_POST['lecnum'];
-        $te_nick = $_POST['nick'];
-        $te_content = $_POST['content'];
+        $ev_seme = $_POST['seme'];
+        $ev_star = $_POST['star'];
+        $ev_lecnum = $_POST['lecnum'];
+        $ev_nick = $_POST['nick'];
+        $ev_content = $_POST['content'];
+
         
-    
+
+
     #$REMOTE_ADDR = $_SERVER[REMOTE_ADDR];
 
 
         $stmt = $con->prepare(
-                        'INSERT INTO Etest (TE_SEME,TE_LECNUM,TE_NICK, TE_CONTENT) 
-                        VALUES( :TE_SEME,:TE_LECNUM,:TE_NICK,:TE_CONTENT)');
+                        'INSERT INTO Evaluation (EV_SEME,EV_STAR,EV_LECNUM,EV_NICK, EV_CONTENT) 
+                        VALUES( :EV_SEME,:EV_STAR,:EV_LECNUM,:EV_NICK,:EV_CONTENT)');
 
+        
+                $stmt->bindParam(':EV_SEME', $ev_seme);
+                $stmt->bindParam(':EV_STAR', $ev_star);
+                $stmt->bindParam(':EV_LECNUM', $ev_lecnum);
+                $stmt->bindParam(':EV_NICK', $ev_nick);
+                $stmt->bindParam(':EV_CONTENT', $ev_content);
+        
 
-
-    $stmt->bindParam(':TE_SEME', $te_seme);
-                $stmt->bindParam(':TE_LECNUM', $te_lecnum);
-                $stmt->bindParam(':TE_NICK', $te_nick);
-                $stmt->bindParam(':TE_CONTENT', $te_content);
 
 
     if ($stmt->execute()) {
