@@ -43,19 +43,21 @@ function is_login(){
         <tr>  
             <th>학기정보</th>  
             <th>학점 </th>
-            <th>내용</th>
-            <th>보기</th>  
+            <th>과목 </th>
+            <th>내용</th>  
              
         </tr>  
         </thead>  
   
         <?php  
 
-	    $stmt = $con->prepare('SELECT * FROM Evaluation ORDER BY id DESC');
+	    $stmt = $con->prepare('SELECT LEC_NAME,EV_SEME,EV_STAR,EV_CONTENT FROM Evaluation,Lectures WHERE EV_LECNUM IN (LEC_NUM) ORDER BY id DESC');
+       
 	    $stmt->execute();
         $EV_SEME = $_POST["seme"];
         $EV_STAR = $_POST["star"];
-
+        $EV_CONTENT = $_POST["content"];
+        $LEC_NAME = $_POST["name"];
             if ($stmt->rowCount() > 0)
             {
                 while($row=$stmt->fetch(PDO::FETCH_ASSOC))
@@ -66,16 +68,10 @@ function is_login(){
             <tr>  
             <td><?php echo $EV_SEME;  ?></td> 
             <td><?php echo $EV_STAR; ?></td>
-            <td>
-            <?php 
-            if($activate)
-            { 
-                echo "추천";
-            } else{
-                echo "비추천";
-            }
-            ?>
-            </td>
+            <td><?php echo $LEC_NAME; ?></td>
+            <td><?php echo $EV_CONTENT; ?></td>
+
+            
             <td><a class="btn btn-primary" href="editform.php?edit_id=<?php echo $EV_SEME ?>"><span class="glyphicon glyphicon-pencil"></span> 추천 </a></td> 
             
             </tr> 
