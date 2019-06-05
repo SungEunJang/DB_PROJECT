@@ -51,3 +51,12 @@ view 로그인(Log)  // 로그인 시 가입여부 비교 회원정보에서 다
    닉네임: rec_nick, fk 
   학기정보: rec_seme*/
 
+/*Q&A (QnA)
+   제목: QA_title,
+   닉네임:QA_nick,
+   내용:QA_content,
+   날짜:QA_date,
+   댓글:QA_ Reply -> 댓글 내용: Reply_content, 
+                                 댓글 닉네임:Reply_nick,
+                                 댓글 날짜: Reply_date
+*/
