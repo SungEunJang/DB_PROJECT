@@ -123,13 +123,13 @@ public MainPage() {
 		loginBtn.setLocation(400, 45);
 		changeBtn.setLocation(400,100);
 		DeleteBtn.setLocation(400, 155);
-		//createBtn.setLocation(50, 280);
+	//createBtn.setLocation(50, 280);
 		mainUserField.setSize(dim_Field);
 		mainUserLabel.setSize(dim_Label);
 		pwLabel.setSize(dim_Label);
 		pwField.setSize(dim_Field);
 		loginBtn.setSize(dim_Button);
-		//createBtn.setSize(dim_Button);	//계정생성 버튼. 
+	//createBtn.setSize(dim_Button);	//계정생성 버튼. 
 		changeBtn.setSize(dim_Button);  //계정 수정 버튼 
 		DeleteBtn.setSize(dim_Button);
 		
@@ -153,7 +153,7 @@ public MainPage() {
 		mainPanel.add(DeleteBtn);
  //login시 나오는 panel 
 		
-	//경고창이다.
+	//경고창
 		warnFrame.setSize(400, 200);
 		warnFrame.setLocation(0, 0);
 		warnFrame.setLayout(null);
@@ -169,7 +169,7 @@ public MainPage() {
 		warnFrame.add(warnLabel);
 		warnFrame.add(warnBtn);
 		
-		//계정의 비밀번호 변경 시 사용함.
+	//계정의 비밀번호 변경 시 사용함.
 		newLabel[0] = new JLabel("UserName");
 		newField[0] = new JTextField();
 		newLabel[1] = new JLabel("Your Password");
@@ -183,19 +183,19 @@ public MainPage() {
 		newBtn[1] = new JButton("Cancel");
 		newBtn[2] = new JButton("Check");
 		
-		//계정 삭제 시 사용
+	//계정 삭제 시 사용
 		deleteLabel[0] = new JLabel("UserName");
 		deleteField[0] = new JTextField();
 		deleteLabel[1] = new JLabel("Before Password");
 		deleteField[1] = new JTextField();
 		deleteLabel[2] = new JLabel("E-mail");
 		deleteField[2] = new JTextField();
-		//계정 삭제에 승인하거나 취소할때 사용하는 버튼.
+	//계정 삭제에 승인하거나 취소할때 사용하는 버튼.
 		deleteBtn[0] = new JButton("OK");
 		deleteBtn[1] = new JButton("Cancel_delete");
 		
 	}
-
+//실제 구현과 연관된 부분들 ====> JAVA영역 
 	class ButtonAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton myButton = (JButton)e.getSource();
@@ -209,7 +209,7 @@ public MainPage() {
 				mainUserField.setText("");
 				pwField.setText("");
 
-				mode = LOGINCHECK;
+				mode = LOGINCHECK;                                          //LOGINCHECK로 넘기면 command에서 SQL 구현. 
 				System.out.println("Login 정보 " + username + " " + passwd);  //콘솔창에서 로그인 정보가 출력되도록 하였다. 
 				command(); 
 			}
@@ -220,14 +220,15 @@ public MainPage() {
 				} catch (IOException ex) {
 				}
 			}*/
-			else if(temp.equals("Change Account")) {
+			else if(temp.equals("Change Account")) { 
+				/*계정의 비밀번호를 변경시, CHANGEACCOUNT라는 FLAG를 사용하는데, 이때, 기존의 panel인 mainpanel을 remove하고 새롭게 지정한 panel을 add한다.  */
 				mode = CHANGEACCOUNT;
 				createPanel.setLayout(null);
 				frame.remove(mainPanel);
 				frame.add(createPanel);
 				frame.revalidate();
 				frame.repaint();
-				
+				//createpanel의 디자인 부분. 
 				int x = 50, y = 10;
 
 				for(int i =  0; i< newLabel.length ; i++) {
@@ -256,38 +257,59 @@ public MainPage() {
 				
 			}
 				
-
+			//warnFrame(경고창)이 사라지도록 함. 
 			else if(temp.equals("Got it")){
 					warnFrame.setVisible(false);
 				}
+			/*계정 변경시 createpanel에서 작성한 내용을 save를누르면 그때 비로서 save라는 flag가 넘어가고 
+			이때!!, command 함수 부분에서 SQL문 중 UPDATE를 한다. */
 			else if(temp.equals("Save")) {				
 					mode = SAVE;
 					String warnMessage = "";
 					warnMessage ="Success!";
-						System.out.println("new account added");
+						//userField라는 배열에 입력값을 저장한다. 이때, command함수로 넘어갈때 같이 넘어가게 된다. 
 						username = newField[0].getText();
 						passwd = newField[1].getText();
 						new_passwd = newField[2].getText();
 						
 						email = newField[3].getText();
-
-						command();
+				//command함수를 실행함. 이때, flag인 SAVE에 해당하는 부분만 실행함.
+						command(); 
 						warnLabel.setText("password changed successfully!");
 						warnFrame.setVisible(true);
 						frame.remove(createPanel);
 						frame.add(mainPanel);
 						frame.revalidate();
 						frame.repaint();
+						//이후에 있을 동작들을 위해서 다시 DEFAULT flag로 돌아간다.
 						mode = DEFAULT;
 						check = 0;
 					}
+			//계정의 비밀번호 변경을 진행하다가 그만두고 싶은 경우에 실행하는 코드이다. 만일 비밀번호 변경을 진행하던 도중 cancel을 누르면 mainpanel로 돌아간다.
+			else if(temp.equals("Cancel")) {
+				frame.remove(createPanel);
+				frame.remove(userPanel);
+				frame.add(mainPanel);
+				frame.revalidate();
+				frame.repaint();
+				for(int i = 0; i < newField.length; i++) {
+					newField[i].setText("");
+				}
+				for(int i = 0; i < userField.length; i++) {
+					userField[i].setText("");
+				}
+				mode = DEFAULT;
+			}
+			//계정 삭제
 			else if(temp.equals("Delete Account")) {
-					
+					//계정을 삭제할때, 나타나는 panel인 deletePanel이다. 위와 동일하게 mainpanel을 remove하고 deletepanel을 add한다. 
+				//해당 부분에서도 실질적인 sql구현은 없다. !!! 실질적인 구현은 deletepanel안의 deletebtn버튼을 눌렀을때, 실행한다. 
 					deletePanel.setLayout(null);
 					frame.remove(mainPanel);
 					frame.add(deletePanel);
 					frame.revalidate();
 					frame.repaint();
+					//버튼과 Label, Field 위치 선정. 
 					int x = 50, y = 10;
 
 					for(int i =  0; i< deleteLabel.length ; i++) {
@@ -310,6 +332,44 @@ public MainPage() {
 					}
 
 				}
+			//계정 삭제 시 실질적인 구현 부분. 
+			//실질적으로 구현할 때, 삭제가 sql쿼리 문으로 넘어가서 진행하게 되는 부분이다.  
+			else if(temp.equals("OK")) {				
+				mode = DELETEACCOUNT;
+				String warnMessage = "";
+				warnMessage ="Your account was deleted";
+					System.out.println("DeleteaACCOUNT");
+					username = deleteField[0].getText();
+					passwd = deleteField[1].getText();
+					
+					//deletepanel안의 deleteField에 입력된 값을 command함수로 넘겨준다. 이때, 위와 동일하게 command에서는 DELETEACCOUNT영역만 실행한다. 
+					command();
+					//계정이 무사히 삭제 되면 경고창을 통해서 계정이 삭제됨을 알려준다. 그 후, deletepanel을 remove하고 mainpanel을 add해준다. 
+					warnLabel.setText("Account Delete!");
+					warnFrame.setVisible(true);
+					frame.remove(deletePanel);
+					frame.add(mainPanel);
+					frame.revalidate();
+					frame.repaint();
+					mode = DEFAULT;
+					check = 0;
+				}
+			//계정 과정을 모두 그만두고 싶으면, cancel_Delete버튼을 누르면 다시 mainpanel로 돌아간다. 
+			else if(temp.equals("Cancel_delete")) {
+				frame.remove(deletePanel);
+				frame.remove(userPanel);
+				frame.add(mainPanel);
+				frame.revalidate();
+				frame.repaint();
+				for(int i = 0; i < newField.length; i++) {
+					newField[i].setText("");
+				}
+				for(int i = 0; i < userField.length; i++) {
+					userField[i].setText("");
+				}
+				mode = DEFAULT;
+			}
+			//단순한 창을 끄는 버튼이다.
 			else if(temp.equals("CLOSE")) {
 					frame.remove(adminPanel);
 					
@@ -318,6 +378,7 @@ public MainPage() {
 					frame.repaint();
 					mode =DEFAULT;
 				}
+			//단순한 창을 끄는 버튼이다.
 			else if(temp.equals("CLOSED")) {
 				frame.remove(loginPanel);
 				
@@ -326,54 +387,8 @@ public MainPage() {
 				frame.repaint();
 				mode =DEFAULT;
 			}
-			else if(temp.equals("OK")) {				
-					mode = DELETEACCOUNT;
-					String warnMessage = "";
-					warnMessage ="Your account was deleted";
-						System.out.println("Delete aCCOUNT");
-						username = deleteField[0].getText();
-						passwd = deleteField[1].getText();
-						
-
-						command();
-						warnLabel.setText("Account Delete!");
-						warnFrame.setVisible(true);
-						frame.remove(deletePanel);
-						frame.add(mainPanel);
-						frame.revalidate();
-						frame.repaint();
-						mode = DEFAULT;
-						check = 0;
-					}
-
-			else if(temp.equals("Cancel")) {
-					frame.remove(createPanel);
-					frame.remove(userPanel);
-					frame.add(mainPanel);
-					frame.revalidate();
-					frame.repaint();
-					for(int i = 0; i < newField.length; i++) {
-						newField[i].setText("");
-					}
-					for(int i = 0; i < userField.length; i++) {
-						userField[i].setText("");
-					}
-					mode = DEFAULT;
-				}
-			else if(temp.equals("Cancel_delete")) {
-					frame.remove(deletePanel);
-					frame.remove(userPanel);
-					frame.add(mainPanel);
-					frame.revalidate();
-					frame.repaint();
-					for(int i = 0; i < newField.length; i++) {
-						newField[i].setText("");
-					}
-					for(int i = 0; i < userField.length; i++) {
-						userField[i].setText("");
-					}
-					mode = DEFAULT;
-				}
+			
+			//중복확인을 진행하는 버튼으로서 본인이 가입이 되어있는지 이름을 통해서 조회가능하다. 
 			else if (temp.equals("Check")) {
 					username = newField[0].getText();
 					//newField[0].setText("");
@@ -386,7 +401,7 @@ public MainPage() {
 		}
 	
 		
-	
+//!! SQL쿼리 문과 JAVA를 연결지어서 구현하는 부분이다. 	
 	public void command() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver"); 
@@ -396,7 +411,7 @@ public MainPage() {
 			
 
 			stmt = conn.createStatement();
-			
+			//본인의 DB 이름을 작성해준다. 
 			String useXproject = "use fortest";
 			stmt.executeUpdate(useXproject);
 			
@@ -404,12 +419,15 @@ public MainPage() {
 				col = "SINFO_SSN";
 				what = username;
 				
+				//해당 쿼리문에서는 입력한 데이터와 비교할 기존 회원 데이터중 입력된 학번과 같은 값을 출력한다.
 				String search = "select * from SINFO where " + col + " like '" + what +"';";
 				//System.out.println(search);
 				rs = stmt.executeQuery(search);
 				if(rs.next()) {
 					if(passwd.equals(rs.getString("SINFO_PASS"))){
+						//로그인시 조회해야하는 부분들을 조회되면 진입할 수 있는 IF문이다.비밀번호 영역 조회로 넘어가면 된다. 
 						if(username.equals("9999")) {
+							//만일 본인이 이 페이지의 간리자라면, id에 9999와 비밀번호에 0을 입력하면, admin으로 로그인을 해서 회원 정보를 조회할 수 있다. 
 							System.out.println("Admin Log in");
 							warnFrame.setVisible(true);
 							warnLabel.setText("Admin Log in");
@@ -418,6 +436,7 @@ public MainPage() {
 							frame.add(adminPanel);
 							frame.revalidate();
 							frame.repaint();
+							//관리자 계정으로 로그인하면, 가입되어있는 모든 회원 데이터를 조회한다.
 							String Admin = "Select * from SINFO;";
 							ad=stmt.executeQuery(Admin);
 							while(ad.next()) {
@@ -426,6 +445,7 @@ public MainPage() {
 								data.add(ad.getString("SINFO_NAME"));
 								
 							}
+							//출력할 때에는 adminpanel에 출력한다. 보기 좋게 보이기 위해서 JTable을 이용해서 table 형태로 출력한다. 
 							String header[]= {"SINFO_SSN","SINFO_PASS","SINFO_NAME"};
 							String contents[][] = new String[data.size()/3][3];
 							for(int i = 0; i < data.size()/3; i++) {
@@ -452,7 +472,8 @@ public MainPage() {
 							adminPanel.add(closeBtn);
 							
 						}
-					else {
+					else { 
+						//만일 로그인한 사용자가 admin이 아닌 회원이라면, 자신이 작성햇던 강의 평가 내역을 조회할 수 있다.
 							loginPanel.setLayout(null);
 							frame.remove(mainPanel);
 							frame.add(loginPanel);
@@ -460,6 +481,11 @@ public MainPage() {
 							frame.repaint();
 							warnFrame.setVisible(true);
 							warnLabel.setText("Login Succeeded");
+							/*해당 쿼리문은 3개의 테이블에서 필요한 데이터 2개를 가져오는 쿼리문이다. 
+							첫번째로 가입자 명단인 SINFO에서 로그인된  학번에 해당하는 이름을 가져온다. 이때, 
+							가져온 이름은 Evaluation인 강의평가작성 테이블에서 같은 이름으로 작성된 과목 번호를 가져온다.
+							가져온 과목번호를 통해서 Lectures라는 강의 목록 테이블의 강의 이름에 접근해서 최종적으로는 
+							해당 학번학생이 작성한 강의 이름이 출력되도록 하였다.  */
 							String LOG = "SELECT LEC_NAME, k.SINFO_NAME FROM (SELECT SINFO_NAME,EV_CONTENT FROM (SELECT SINFO_NAME,SINFO_SSN FROM SINFO) A "+
 																		"JOIN Evaluation e ON A.SINFO_NAME = E.ev_nick) k,lectures l "+
 																		"where (l.lec_num,k.SINFO_NAME) in (SELECT EV_LECNUM,A.SINFO_NAME FROM "+
@@ -503,12 +529,14 @@ public MainPage() {
 					}
 						
 					else {
+						//비밀번호가 틀려서 로그인이 거부되는 경우.
 						System.out.println("login failed");
 						warnFrame.setVisible(true);
 						warnLabel.setText("Password is wrong.");
 					}
 				}
 				else {
+					//아이디가 존재하지 않아서 로그인이 거부되는 경우.
 					System.out.println("login failed");
 					warnFrame.setVisible(true);
 					warnLabel.setText("UserName does not exist.");
@@ -516,22 +544,26 @@ public MainPage() {
 
 				}
 			}
+			//변경된 계정을 최종 저장하면, 바뀐 비밀번호로 DB를 업데이트해서 저장한다. 
 			else if(mode == SAVE) {
 				String Update = "update SINFO set SINFO_PASS = '" + new_passwd 
 						+ "' where SINFO_NAME = '"+ username+"' ; ";
 				stmt.executeUpdate(Update);
 				System.out.println(Update);
 			}
+			//만일 본인의 계정을 삭제한다면, 해당 학번의 열에 있는 회원정보를 삭제한다. 
 			else if(mode ==DELETEACCOUNT) {
 				String delete = "DELETE FROM SINFO WHERE SINFO_SSN =' "+ username +"';";
 				System.out.println(delete);
 				stmt.executeUpdate(delete);
 			}
+			//관리자 모드로 진행된다면, 필요한 모든 가입자 목록을 출력해야하므로 아래와 같은 쿼리문을 작성하였다. 
 			else if(mode ==ADMIN) {
 				String admin = "SELECT * FROM SINFO;";
 				System.out.println(admin);
 				stmt.executeUpdate(admin);
 			}
+			//계정을 변경할때, 본인이 가입되어 있는지 확인하는 부분으로, 본인의 이름이 있는지 조회한다. 없으면, 없다고 돌아가고, 만일 있으면, 그대로 진행할 수 있다. 
 			else if(mode ==CHECK) {
 				col = "SINFO_NAME";
 				what = username;
@@ -563,6 +595,7 @@ public MainPage() {
 				}
 			
 		}
+		//발생할 수 있는 예외처리 과정. 
 		catch(ClassNotFoundException e) {
 			e.printStackTrace();
 		}
