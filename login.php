@@ -1,9 +1,18 @@
+<?php
+	include("logincheck.php");
+
+    if (is_login()){
+        ;
+    }else {
+        echo "<script>location.href='main.php'</script>";
+    }
+?>
+
 <!DOCTYPE html>
 <html>
 	<meta charset="utf-8">
 	<h1>Sign in</h1>
 <head>
-	<title></title>
 </head>
 <body>
 	<form action="" method="post">
@@ -26,11 +35,14 @@
 	include("dbcon.php");
 
 	if ( ($_SERVER['REQUEST_METHOD'] == 'POST') and isset($_POST['signin']) ) {
+
 		$userid = $_POST['userid'];
 		$userpw = $_POST['userpw'];
 
 		try { 
-				$stmt = $con->prepare("SELECT sinfo_ssn, sinfo_pass, sinfo_nick FROM SINFO WHERE SINFO_SSN = '$userid'");
+				$stmt = $con->prepare("SELECT sinfo_ssn, sinfo_pass, sinfo_nick, sinfo_major 
+										FROM SINFO 
+										WHERE SINFO_SSN = '$userid'");
 				$stmt->bindParam(':sinfo_ssn', $userid);
 				$stmt->execute();
 		} catch(PDOException $e) {
@@ -43,7 +55,11 @@
 		if ($row) {
 			if ($password == $userpw) {
 				$usernick = $row['sinfo_nick'];
+				$usermajor = $row['sinfo_major'];
+
 				$_SESSION['usernick'] = $usernick;
+				$_SESSION['usermajor'] = $usermajor;
+
 				echo "<script>alert('Welcome $usernick!');</script>";
 				echo "<script>location.href='main.php'</script>";
 			}

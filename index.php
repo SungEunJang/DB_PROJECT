@@ -1,3 +1,14 @@
+<?php
+    include("logincheck.php");
+
+    if (is_login()){
+        ;
+    }else {
+        echo "<script>location.href='main.php'</script>";
+    }
+
+?>
+
 <!DOCTYPE html>
 <html>
     <meta charset="utf-8">

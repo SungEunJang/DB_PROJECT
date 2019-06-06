@@ -5,6 +5,7 @@
 			 						FROM  Evaluation, Lectures 
 			 						WHERE EV_LECNUM = LEC_NUM
 			 						AND   EV_SEME = LEC_SEME
+			 						AND   EV_RECOM > 7
 			 						ORDER BY EV_RECOM DESC');
  			$stmt->execute();
 	    } catch(PDOException $e) {

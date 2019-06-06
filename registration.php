@@ -1,9 +1,14 @@
 <?php
-	include("dbcon.php");
+	include("logincheck.php");
 
-	$username = $_SESSION['user_name'];
-	$userssn  = $_SESSION['user_ssn'];
-	$usermajor = $_SESSION['user_major'];
+    if (is_login()) {
+    	include("dbcon.php");
+        $username = $_SESSION['user_name'];
+		$userssn  = $_SESSION['user_ssn'];
+		$usermajor = $_SESSION['user_major'];
+    } else {
+        echo "<script>location.href='main.php'</script>";
+    }
 ?>
 
 <html>
