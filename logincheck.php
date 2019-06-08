@@ -1,29 +1,13 @@
 <?php
-
-    error_reporting(E_ALL); 
-    ini_set('display_errors',1); 
-
+# 사용자가 로그인이 되어있는지 체크하는 php 파일입니다.
+#is_login() 의 return 값이 true면 로그인 된 상태, false면 로그인 안 되어있는 상태
     function is_login(){
 
-        global $con;
-
-        if (isset($_SESSION['usernick']) && !empty($_SESSION['usernick']) ){
-
-            $stmt = $con->prepare("SELECT sinfo_nick FROM sinfo WHERE sinfo_nick = :usernick");
-            $stmt->bindParam(':usernick', $_SESSION['usernick']);
-            $stmt->execute();
-            $count = $stmt->rowcount();
-
-            if ($count == 1){
-           
-                return true; //로그인 상태
-            }else{
-                //사용자 테이블에 없는 사람
-                return false;
-            }
-        }else{
-
-            return false; //로그인 안된 상태
+    	#localhost에 접속해있는 상태에서 'usernick'이라는 SESSION이 설정되어 있다면 login.php 에서 로그인이 성공한 상태
+        if (isset($_SESSION['usernick'])) {
+            return true;  // 로그인 된 상태
+        } else {
+            return false; // 로그인 안된 상태
         }
     }
 ?>

@@ -1,3 +1,21 @@
+<!-- 
+    본 파일인 authentication.php는 회원가입을 진행하기 위해 숙명여대 학생인지 인증하는 단계의 페이지입니다.
+    본인의 이름, 학번, 전공을 입력하면 숙명여대 학생들의 정보를 담고 있는 릴레이션인 Students_reg를 검색합니다.
+    Students_reg에 존재하는 학생이라면 본 학교 학생이므로 '강의평가 했sook'의 회원가입 페이지인 registration.php로 넘어갑니다.
+-->
+
+<?php
+    #로그인이 되어있는지 확인하는 함수 is_login()을 사용하기 위해여 logincheck.php를 본 페이지에 포함시킨다.
+    include("logincheck.php");
+
+    if (is_login()) {
+        header("Location: main.php");       // 로그인이 되어으므로 index.php 페이지에 접속을 못하고 main.php로 바로 넘어간다.
+    } else {
+        ;                                   // 로그인이 안 되어있으므로 아무것도 하지 않고 authentication.php에 머무른다.
+    }
+?>
+
+
 <html>
 <head>
     <meta charset="UTF-8">

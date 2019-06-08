@@ -1,6 +1,13 @@
 <?php
     include('dbcon.php'); 
-    $usernick = $_SESSION['usernick'];
+    include('logincheck.php');
+
+     if (is_login()) {
+        $usernick = $_SESSION['usernick'];
+    } else {
+        header("Location: index.php");
+    }
+    
 
     try {
         $stmt = $con->prepare("SELECT DISTINCT LEC_SEME FROM Lectures");      
@@ -58,11 +65,6 @@
         right:-40%;
     }
 
-    #eval_list {
-        border-style: dashed;;
-    }
-
-
     </style>
 
      <script type="text/javascript">
@@ -82,18 +84,20 @@
             }
         }
     </script>
-
-    <nav id="topMenu">
-        <ul>
-            <li><a class="menuLink" href="main.php">강의평가</a></li>
-            <li><a class="menuLink" href="recommendation.php">강의추천</a></li>
-            <li><a class="menuLink" href="qtest.php">Q&A</a></li>
-        </ul>
-    </nav>
+    <div class="menubar">
+        <nav id="topMenu">
+            <ul>
+                <li><a class="menuLink" href="main.php">강의평가</a></li>
+                <li><a class="menuLink" href="recommendation.php">강의추천</a></li>
+                <li><a class="menuLink" href="qtest.php">Q&A</a></li>
+                <li><a class="menuLink" href="logout.php">로그아웃</a></li>
+                <li><a class="menuLink" href="leaveaccount.php">회원탈퇴</a></li>
+            </ul>
+        </nav>
+    </div>
 </head>
 
 <body>
-    <div class="container">
     <div class="page-header">
         <h1 class="h2">&nbsp; 강의평가 했SOOK</h1><hr>
     </div>
@@ -104,7 +108,6 @@
                 <tr>
                     <font20 align=centnt color=blue><B>강 의 평</B></font>
                 </tr>
-        <!-- 입력 부분 -->
                 <tr>
                     <td bgcolor=white>&nbsp;
                         <table>
@@ -174,13 +177,11 @@
                         </table>
                     </td>
                 </tr>
-    <!-- 입력 부분 끝 -->
              </table>
         </form>
 
         <?php
             if ( ($_SERVER['REQUEST_METHOD'] == 'POST') and isset($_POST['register']) ) {
-
                 $ev_nick = $usernick;
                 $ev_recom = $_POST['star'];
                 $lec_seme = $_POST['seme'];
@@ -203,8 +204,6 @@
                     $stmt_lecnum->execute();
                     $row = $stmt_lecnum->fetch();
                     $lecnum = $row['LEC_NUM'];
-
-
                 } catch(PDOException $e) {
                     die("Database error. " . $e->getMessage()); 
                 }
@@ -213,7 +212,6 @@
                 $ev_seme = $lec_seme;
 
                 try {
-
                     $stmt = $con->prepare(
                                     'INSERT INTO Evaluation (EV_SEME,EV_RECOM,EV_LECNUM,EV_NICK, EV_CONTENT, EV_TIME) 
                                     VALUES( :EV_SEME, :EV_RECOM, :EV_LECNUM, :EV_NICK, :EV_CONTENT, :EV_TIME)');
@@ -222,7 +220,7 @@
                     $stmt->bindParam(':EV_LECNUM', $ev_lecnum);
                     $stmt->bindParam(':EV_NICK', $ev_nick);
                     $stmt->bindParam(':EV_CONTENT', $ev_content);
-                    $stmt->bindParam(':EV_TIME', $EV_TIME);
+                    $stmt->bindParam(':EV_TIME', $ev_time);
 
                     if ($stmt->execute()) {
                         echo "<script>location.href='main.php'</script>";
@@ -234,25 +232,17 @@
                 } catch(PDOException $e) {
                     die("Database error. " . $e->getMessage()); 
                 }
-
-
-                //데이터베이스와의 연결 종료
-                //mysql_close($con);
-
-                // 새 글 쓰기인 경우 리스트로..
                 echo ("<meta http-equiv='Refresh' content='1; URL=main.php'>");
             }
         ?>
     </div>
 
-
     <div class="right_list" id="right_list">
             <?php  
-
                 $stmt = $con->prepare('SELECT LEC_NAME, EV_SEME, LEC_CREDITS, EV_CONTENT, EV_RECOM, EV_NICK, LEC_PROF, LEC_TYPE
                                     FROM Evaluation,Lectures 
                                     WHERE EV_LECNUM IN (LEC_NUM) 
-                                    ORDER BY EV_TIME ASC');
+                                    ORDER BY EV_TIME DESC');
 
                 $stmt->bindParam(':LEC_NAME', $LEC_NAME);
                 $stmt->bindParam(':EV_SEME', $EV_SEME);
@@ -269,26 +259,25 @@
                         extract($row);
             ?>  
                 <table style="table-layout: fixed; width: 600px" id="eval_list">  
-                        <tr>
-                            <td>작성자 <?php echo $EV_NICK; ?></td>
-                        </tr>
-                        <tr>
-                            <td>강의명 <?php echo $LEC_NAME; ?> </td>
-                            <td>교수명 <?php echo $LEC_PROF; ?> </td>
-                        </tr>
-                        <tr>
-                            <td>강의유형 <?php echo $LEC_TYPE; ?> </td>
-                            <td><?php echo $LEC_CREDITS; ?>학점</td>
-                        </tr>
-                            <td>학기 <?php echo $EV_SEME;  ?></td>  
-                            <td>평점 <?php echo $EV_RECOM; ?></td>                    
-                        </tr>
-                        <tr>
-                            <td colspan="2"><?php echo $EV_CONTENT; ?></td>
-                        </tr>
-                        </table>
-                        <br> 
-            
+                    <tr>
+                        <td>작성자 <?php echo $EV_NICK; ?></td>
+                    </tr>
+                    <tr>
+                        <td>강의명 <?php echo $LEC_NAME; ?> </td>
+                        <td>교수명 <?php echo $LEC_PROF; ?> </td>
+                    </tr>
+                    <tr>
+                        <td>강의유형 <?php echo $LEC_TYPE; ?> </td>
+                        <td><?php echo $LEC_CREDITS; ?>학점</td>
+                    </tr>
+                        <td>학기 <?php echo $EV_SEME;  ?></td>  
+                        <td>평점 <?php echo $EV_RECOM; ?></td>                    
+                    </tr>
+                    <tr>
+                        <td colspan="2"><?php echo $EV_CONTENT; ?></td>
+                    </tr>
+                </table>
+                <br>
             <?php
                         }
                     }

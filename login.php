@@ -2,9 +2,9 @@
 	include("logincheck.php");
 
     if (is_login()){
-        ;
+        header("Location: main.php");
     }else {
-        echo "<script>location.href='main.php'</script>";
+        ;
     }
 ?>
 
@@ -55,10 +55,8 @@
 		if ($row) {
 			if ($password == $userpw) {
 				$usernick = $row['sinfo_nick'];
-				$usermajor = $row['sinfo_major'];
 
 				$_SESSION['usernick'] = $usernick;
-				$_SESSION['usermajor'] = $usermajor;
 
 				echo "<script>alert('Welcome $usernick!');</script>";
 				echo "<script>location.href='main.php'</script>";

@@ -16,6 +16,44 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<style type="text/css">
+		#topMenu { 
+	        height: 30px;
+	        width: 850px;
+	    }
+	    #topMenu ul li { 
+	        list-style: none; 
+	        color: white;
+	        background-color: #2d2d2d; 
+	        float: left;
+	        line-height: 30px;
+	        vertical-align: middle; 
+	        text-align: center;
+	    }
+	     #topMenu .menuLink {
+	        text-decoration:none;
+	        color: white;
+	        display: block;
+	        width: 150px;
+	        font-size: 12px; 
+	        font-weight: bold;
+	        font-family: "Trebuchet MS", Dotum, Arial;
+	    } 
+	    #topMenu .menuLink:hover { 
+	    color: red;
+	    background-color: #4d4d4d;
+	    }
+	</style>
+	<div class="menubar">
+		<nav id="topMenu">
+	        <ul>
+	            <li><a class="menuLink" href="main.php">강의평가</a></li>
+	            <li><a class="menuLink" href="recommendation.php">강의추천</a></li>
+	            <li><a class="menuLink" href="qtest.php">Q&A</a></li>
+	            <li><a class="menuLink" href="logout.php">로그아웃</a></li>
+	        </ul>
+	    </nav>
+	</div>
 	<div class="page-header">
 		<h1>강의평가 했Sook - 강의 추천</h1>
 	</div>

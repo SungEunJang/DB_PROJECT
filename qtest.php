@@ -1,11 +1,52 @@
 <?php
-include('dbcon.php'); 
+	include('dbcon.php');
+	$usernick = $_SESSION['usernick'];
+    if (isset($_SESSION['list_num']))
+        unset($_SESSION['list_num']);
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
+    <style type="text/css">
+        #topMenu { 
+            height: 30px;
+            width: 850px;
+        }
+        #topMenu ul li { 
+            list-style: none; 
+            color: white;
+            background-color: #2d2d2d; 
+            float: left;
+            line-height: 30px;
+            vertical-align: middle; 
+            text-align: center;
+        }
+         #topMenu .menuLink {
+            text-decoration:none;
+            color: white;
+            display: block;
+            width: 150px;
+            font-size: 12px; 
+            font-weight: bold;
+            font-family: "Trebuchet MS", Dotum, Arial;
+        } 
+        #topMenu .menuLink:hover { 
+            color: red;
+            background-color: #4d4d4d;
+        }
+    </style>
     <title></title>
+    <div class="menubar">
+        <nav id="topMenu">
+            <ul>
+                <li><a class="menuLink" href="main.php">강의평가</a></li>
+                <li><a class="menuLink" href="recommendation.php">강의추천</a></li>
+                <li><a class="menuLink" href="qtest.php">Q&A</a></li>
+                <li><a class="menuLink" href="logout.php">로그아웃</a></li>
+            </ul>
+        </nav>
+    </div>
 </head>
 <body>
     <form action="qlook.php" method=post>
