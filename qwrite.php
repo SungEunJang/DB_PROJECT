@@ -44,6 +44,8 @@
                 <li><a class="menuLink" href="recommendation.php">강의추천</a></li>
                 <li><a class="menuLink" href="qtest.php">Q&A</a></li>
                 <li><a class="menuLink" href="logout.php">로그아웃</a></li>
+                <li><a class="menuLink" href="leaveaccount.php">회원탈퇴</a></li>
+                <li><a class="menuLink" href="updateinfo.php">정보수정</a></li>
             </ul>
         </nav>
     </div>

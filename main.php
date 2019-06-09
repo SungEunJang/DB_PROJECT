@@ -21,7 +21,7 @@
 <html>
 <head>
     <style type="text/css">
-    #topMenu {   // 참고 : https://unikys.tistory.com/333
+    #topMenu { 
         height: 30px;
         width: 850px;
     }
@@ -92,6 +92,7 @@
                 <li><a class="menuLink" href="qtest.php">Q&A</a></li>
                 <li><a class="menuLink" href="logout.php">로그아웃</a></li>
                 <li><a class="menuLink" href="leaveaccount.php">회원탈퇴</a></li>
+                <li><a class="menuLink" href="updateinfo.php">정보수정</a></li>
             </ul>
         </nav>
     </div>
